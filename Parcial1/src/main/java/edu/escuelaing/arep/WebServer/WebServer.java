@@ -1,12 +1,15 @@
 package edu.escuelaing.arep.WebServer;
 
 
+import static spark.Spark.get;
+import static spark.Spark.port;
+import static spark.Spark.post;
+import static spark.Spark.staticFiles;
+
+
 import com.google.gson.Gson;
-import static spark.Spark.*;
 
-import java.util.ArrayList;
-
-import edu.escuelaing.Calculator.Calculator;
+import edu.escuelaing.arep.Calculator.Calculator;
 
 public  class WebServer {
     static Calculator calc;
@@ -27,10 +30,9 @@ public  class WebServer {
         post("/parcial/calcular/", (req, res) -> {
             //res.type("application/json");
             //res.status(201);
-            
-            ArrayList<Double> ordenados = calc.Ordenar(req.body());
+            System.out.println("peticion");
+            Double[] ordenados = calc.Ordenar(req.body());
             Double sum = calc.sumatoria(ordenados);
-            //System.out.println(calculado);
             String resp = respuesta(ordenados,sum);
             System.out.println(resp);
 			return gson.toJson(resp);
@@ -38,13 +40,13 @@ public  class WebServer {
         });
         }
         
-        private static String respuesta(ArrayList<Double> ordenados, Double sum) {
+        private static String respuesta(Double[] ordenados, Double sum) {
         String ord ="[";
-        for (Double d: ordenados){
-            if(!(ordenados.indexOf(d)==ordenados.size()-1)){
-                ord+=String.valueOf(d)+",";
+        for (int i=0; i<ordenados.length;i++){
+            if(!(i==ordenados.length-1)){
+                ord+=String.valueOf(ordenados[i])+",";
             }
-            else{ ord+=String.valueOf(d);}
+            else{ ord+=String.valueOf(ordenados[i]);}
         }
         ord+="]";
         System.out.println(ord);
